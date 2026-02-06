@@ -19,7 +19,7 @@ from src.core.plugin import GitHubWebhookPlugin
 
 
 @register(
-    "github_webhook",
+    "astrbot_plugin_github_webhook",
     "TatsukiMengChen",
     "GitHub Webhook 集成插件 - 接收 GitHub 事件并转发到聊天平台",
     "0.4.0",
