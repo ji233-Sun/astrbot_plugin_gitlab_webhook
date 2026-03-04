@@ -1,21 +1,8 @@
 """AstrBot GitLab Webhook Plugin - Entry point."""
 
-import asyncio
-import json
-import sys
-from pathlib import Path
-
-from aiohttp import web
-
-from astrbot.api import AstrBotConfig, logger
-from astrbot.api import all as api
-from astrbot.api.message_components import Plain
 from astrbot.api.star import Context, Star, register
 
-# 将 src/ 添加到 sys.path，使 Python 能找到模块
-sys.path.insert(0, str(Path(__file__).parent))
-
-from src.core.plugin import GitLabWebhookPlugin
+from .src.core.plugin import GitLabWebhookPlugin
 
 
 @register(
