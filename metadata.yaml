@@ -3,7 +3,7 @@ display_name: GitLab Webhook 插件
 author: TatsukiMeng
 version: 0.4.0
 description: 将 GitLab 事件（push、issue、MR 等）转发到聊天平台的插件
-repo: https://github.com/TatsukiMengChen/astrbot_plugin_gitlab_webhook
+repo: https://github.com/ji233-Sun/astrbot_plugin_gitlab_webhook
 license: MIT
 tags:
   - GitLab
