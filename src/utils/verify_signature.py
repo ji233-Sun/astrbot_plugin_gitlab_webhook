@@ -1,7 +1,28 @@
-"""Webhook signature verification utilities."""
+"""Webhook token verification utilities for GitLab."""
 
 import hmac
 import hashlib
+
+
+def verify_token(token_header: str, secret: str) -> bool:
+    """
+    Verify GitLab webhook token.
+
+    GitLab 使用简单的 token 验证方式，通过 X-Gitlab-Token 头传递。
+
+    Args:
+        token_header: X-Gitlab-Token header value
+        secret: Webhook secret from GitLab
+
+    Returns:
+        True if token matches, False otherwise
+    """
+    if not secret or not token_header:
+        return False
+
+    # GitLab 使用简单的字符串比较
+    # 使用常量时间比较以防止时序攻击
+    return hmac.compare_digest(token_header, secret)
 
 
 def verify_signature(
@@ -10,12 +31,14 @@ def verify_signature(
     secret: str,
 ) -> bool:
     """
-    Verify GitHub webhook signature using HMAC-SHA256.
+    Verify webhook signature using HMAC-SHA256 (保留用于兼容性)。
+
+    注意：GitLab 默认使用 token 验证，此函数保留用于可能的扩展场景。
 
     Args:
         payload: Raw request body bytes
-        signature_header: X-Hub-Signature-256 header value
-        secret: Webhook secret from GitHub
+        signature_header: Signature header value
+        secret: Webhook secret
 
     Returns:
         True if signature is valid, False otherwise
@@ -23,18 +46,18 @@ def verify_signature(
     if not secret or not signature_header:
         return False
 
-    # GitHub signature format: sha256=...
-    if not signature_header.startswith("sha256="):
-        return False
+    # 移除可能的前缀
+    if signature_header.startswith("sha256="):
+        signature = signature_header[7:]
+    else:
+        signature = signature_header
 
-    signature = signature_header[7:]  # Remove 'sha256=' prefix
-
-    # Compute expected signature
+    # 计算期望的签名
     expected_signature = hmac.new(
         secret.encode("utf-8"),
         payload,
         hashlib.sha256,
     ).hexdigest()
 
-    # Use constant-time comparison to prevent timing attacks
+    # 使用常量时间比较以防止时序攻击
     return hmac.compare_digest(expected_signature, signature)

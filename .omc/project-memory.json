@@ -1,0 +1,348 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1772632189104,
+  "projectRoot": "/Users/ji233/Documents/0MyProjects/astrbot_plugin_gitlab_webhook",
+  "techStack": {
+    "languages": [
+      {
+        "name": "Python",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "requirements.txt"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "pip",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs",
+      "scripts",
+      "src",
+      "tests"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 8,
+      "lastAccessed": 1772632189085,
+      "keyFiles": [
+        "01-installation.md",
+        "02-configuration.md",
+        "03-usage.md",
+        "04-deployment.md",
+        "05-troubleshooting.md"
+      ]
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 2,
+      "lastAccessed": 1772632189086,
+      "keyFiles": [
+        "README.md",
+        "test-webhook.sh"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 1,
+      "lastAccessed": 1772632189086,
+      "keyFiles": [
+        "__init__.py"
+      ]
+    },
+    "templates": {
+      "path": "templates",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1772632189086,
+      "keyFiles": [
+        "default.md",
+        "furina.md",
+        "ryo.md"
+      ]
+    },
+    "tests": {
+      "path": "tests",
+      "purpose": "Test files",
+      "fileCount": 2,
+      "lastAccessed": 1772632189087,
+      "keyFiles": [
+        "__init__.py",
+        "test_config.py"
+      ]
+    },
+    "src/services": {
+      "path": "src/services",
+      "purpose": "Business logic services",
+      "fileCount": 1,
+      "lastAccessed": 1772632189089,
+      "keyFiles": [
+        "llm_service.py"
+      ]
+    },
+    "src/utils": {
+      "path": "src/utils",
+      "purpose": "Utility functions",
+      "fileCount": 3,
+      "lastAccessed": 1772632189089,
+      "keyFiles": [
+        "__init__.py",
+        "rate_limiter.py",
+        "verify_signature.py"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "",
+      "accessCount": 3,
+      "lastAccessed": 1772632279212,
+      "type": "directory"
+    },
+    {
+      "path": "src/core/config.py",
+      "accessCount": 3,
+      "lastAccessed": 1772632458649,
+      "type": "file"
+    },
+    {
+      "path": "src/handlers/issues_handler.py",
+      "accessCount": 3,
+      "lastAccessed": 1772632869347,
+      "type": "file"
+    },
+    {
+      "path": "main.py",
+      "accessCount": 2,
+      "lastAccessed": 1772632356209,
+      "type": "file"
+    },
+    {
+      "path": "src/core/plugin.py",
+      "accessCount": 2,
+      "lastAccessed": 1772632435213,
+      "type": "file"
+    },
+    {
+      "path": "src/core/constants.py",
+      "accessCount": 2,
+      "lastAccessed": 1772632474984,
+      "type": "file"
+    },
+    {
+      "path": "src/utils/verify_signature.py",
+      "accessCount": 2,
+      "lastAccessed": 1772632498354,
+      "type": "file"
+    },
+    {
+      "path": "src/handlers/push_handler.py",
+      "accessCount": 2,
+      "lastAccessed": 1772632890810,
+      "type": "file"
+    },
+    {
+      "path": "src/formatters/issues_formatter.py",
+      "accessCount": 2,
+      "lastAccessed": 1772632927079,
+      "type": "file"
+    },
+    {
+      "path": "src/formatters/push_formatter.py",
+      "accessCount": 2,
+      "lastAccessed": 1772632965010,
+      "type": "file"
+    },
+    {
+      "path": "src/services/llm_service.py",
+      "accessCount": 2,
+      "lastAccessed": 1772633083003,
+      "type": "file"
+    },
+    {
+      "path": "metadata.yaml",
+      "accessCount": 2,
+      "lastAccessed": 1772633157593,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633157754,
+      "type": "file"
+    },
+    {
+      "path": "src/handlers/__init__.py",
+      "accessCount": 2,
+      "lastAccessed": 1772633191628,
+      "type": "file"
+    },
+    {
+      "path": "src/formatters/__init__.py",
+      "accessCount": 2,
+      "lastAccessed": 1772633191795,
+      "type": "file"
+    },
+    {
+      "path": "templates/default.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633233186,
+      "type": "file"
+    },
+    {
+      "path": "templates/furina.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633255157,
+      "type": "file"
+    },
+    {
+      "path": "templates/ryo.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633255279,
+      "type": "file"
+    },
+    {
+      "path": "docs/index.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633304324,
+      "type": "file"
+    },
+    {
+      "path": "docs/01-installation.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633402399,
+      "type": "file"
+    },
+    {
+      "path": "docs/03-usage.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633402543,
+      "type": "file"
+    },
+    {
+      "path": "docs/02-configuration.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633434043,
+      "type": "file"
+    },
+    {
+      "path": "docs/04-deployment.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633434194,
+      "type": "file"
+    },
+    {
+      "path": "docs/05-troubleshooting.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633434385,
+      "type": "file"
+    },
+    {
+      "path": "docs/06-development.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633566320,
+      "type": "file"
+    },
+    {
+      "path": "docs/07-project-structure.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633566493,
+      "type": "file"
+    },
+    {
+      "path": "_conf_schema.json",
+      "accessCount": 2,
+      "lastAccessed": 1772633597229,
+      "type": "file"
+    },
+    {
+      "path": "scripts/test-webhook.sh",
+      "accessCount": 2,
+      "lastAccessed": 1772633693140,
+      "type": "file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633815494,
+      "type": "file"
+    },
+    {
+      "path": "scripts/README.md",
+      "accessCount": 2,
+      "lastAccessed": 1772633815713,
+      "type": "file"
+    },
+    {
+      "path": "src/__init__.py",
+      "accessCount": 2,
+      "lastAccessed": 1772633894917,
+      "type": "file"
+    },
+    {
+      "path": "src/utils/__init__.py",
+      "accessCount": 2,
+      "lastAccessed": 1772633895146,
+      "type": "file"
+    },
+    {
+      "path": "tests/test_config.py",
+      "accessCount": 2,
+      "lastAccessed": 1772633895505,
+      "type": "file"
+    },
+    {
+      "path": "src/formatters/pull_request_formatter.py",
+      "accessCount": 1,
+      "lastAccessed": 1772632278963,
+      "type": "file"
+    },
+    {
+      "path": "src/handlers/merge_request_handler.py",
+      "accessCount": 1,
+      "lastAccessed": 1772632526314,
+      "type": "file"
+    },
+    {
+      "path": "src/formatters/merge_request_formatter.py",
+      "accessCount": 1,
+      "lastAccessed": 1772632927230,
+      "type": "file"
+    },
+    {
+      "path": "docs",
+      "accessCount": 1,
+      "lastAccessed": 1772633202273,
+      "type": "directory"
+    }
+  ],
+  "userDirectives": []
+}

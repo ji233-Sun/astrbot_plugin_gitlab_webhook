@@ -7,8 +7,8 @@
 ### 已完成
 
 - [x] Issues 事件支持
-- [x] Pull Request 事件支持
-- [x] Webhook Secret 签名验证
+- [x] Merge Request 事件支持
+- [x] Webhook Token 验证
 - [x] 请求速率限制
 - [x] Agent 集成（智能消息生成）
 
@@ -21,7 +21,7 @@
 
 ## 贡献指南
 
-欢迎提交 Issue 和 Pull Request！
+欢迎提交 Issue 和 Merge Request！
 
 ### 提交代码流程
 
@@ -29,7 +29,7 @@
 2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 在 GitHub 上提交 Pull Request
+5. 在 GitLab 上提交 Merge Request
 
 ### 代码规范
 
@@ -40,7 +40,7 @@
 
 ### 提交新功能
 
-如果要添加新的 GitHub 事件支持：
+如果要添加新的 GitLab 事件支持：
 
 1. 在 `handlers/` 目录创建新的 handler 文件
 2. 在 `formatters/` 目录创建对应的 formatter
@@ -50,7 +50,7 @@
 
 ### 添加新 Prompt 示例
 
-1. 在 `prompts/` 目录创建新的 markdown 文件
+1. 在 `templates/` 目录创建新的 markdown 文件
 2. 包含以下内容：
    - 提示词说明
    - 完整的提示词内容
@@ -68,17 +68,17 @@
    ```bash
    curl -X POST http://localhost:8080/webhook \
      -H "Content-Type: application/json" \
-     -d '{"ping": "test"}'
+     -H "X-Gitlab-Event: Push Hook" \
+     -d '{"test": "data"}'
    ```
 3. 检查 AstrBot 日志确认事件被正确接收
 
-### GitHub Webhook 测试
+### GitLab Webhook 测试
 
-1. 在 GitHub 仓库配置 Webhook
-2. 选择 "Let me select individual events"
-3. 勾选要测试的事件
-4. 在仓库中触发相应操作（push、创建 issue 等）
-5. 检查插件日志和群组消息
+1. 在 GitLab 项目配置 Webhook
+2. 选择要触发的事件
+3. 在项目中触发相应操作（push、创建 issue 等）
+4. 检查插件日志和群组消息
 
 ## 许可证
 
@@ -91,10 +91,10 @@ TatsukiMengChen
 ## 致谢
 
 - [AstrBot](https://github.com/AstrBotDevs/AstrBot) - 强大的聊天机器人框架
-- [GitHub Webhooks](https://docs.github.com/en/developers/webhooks-and-events/webhooks) - GitHub 官方文档
+- [GitLab Webhooks](https://docs.gitlab.com/ee/user/project/integrations/webhooks.html) - GitLab 官方文档
 
 ## 相关资源
 
 - [AstrBot 文档](https://docs.astrbot.net)
 - [AstrBot 插件开发指南](https://docs.astrbot.net/dev/star/introduction)
-- [GitHub Webhooks 文档](https://docs.github.com/en/developers/webhooks-and-events/webhooks)
+- [GitLab Webhooks 文档](https://docs.gitlab.com/ee/user/project/integrations/webhooks.html)

@@ -11,13 +11,13 @@ async def send_with_agent(plugin_instance, message: str, data: dict, event_type:
     try:
         # 构建 LLM 任务的 prompt
         event_name = {
-            "push": "代码推送",
-            "issues": "问题",
-            "pull_request": "拉取请求",
+            "Push Hook": "代码推送",
+            "Issue Hook": "问题",
+            "Merge Request Hook": "合并请求",
         }.get(event_type, event_type)
 
-        # 构建 LLM 输入信息 - 优化结构，确保 GitHub 事件内容优先级最高
-        llm_input = f"""GitHub 事件信息：
+        # 构建 LLM 输入信息 - 优化结构，确保 GitLab 事件内容优先级最高
+        llm_input = f"""GitLab 事件信息：
 
 {message}
 
@@ -26,7 +26,7 @@ async def send_with_agent(plugin_instance, message: str, data: dict, event_type:
 1. 消息要简洁明了
 2. 可以使用 emoji 增加趣味性
 3. 保留关键信息（作者、仓库、标题、URL等）
-4. 如果有链接（commit URL、issue URL、PR URL），必须保留
+4. 如果有链接（commit URL、issue URL、MR URL），必须保留
 5. 使用友好、生动的语气
 
 请直接输出最终的消息内容，不要有多余的解释。
@@ -34,7 +34,7 @@ async def send_with_agent(plugin_instance, message: str, data: dict, event_type:
 
         # 诊断日志
         logger.info("=" * 60)
-        logger.info(f"GitHub Webhook: LLM Processing for {event_type} event")
+        logger.info(f"GitLab Webhook: LLM Processing for {event_type} event")
         logger.info(f"  Provider: {plugin_instance.cfg.llm_provider_id or '(default)'}")
         logger.info(f"  Input length: {len(llm_input)} chars")
         logger.info(f"  Input preview (first 300 chars): {llm_input[:300]}...")
@@ -55,10 +55,10 @@ async def send_with_agent(plugin_instance, message: str, data: dict, event_type:
                         plugin_instance.cfg.target_umo
                     )
                 )
-                logger.info(f"GitHub Webhook: Using default provider: {provider_id}")
+                logger.info(f"GitLab Webhook: Using default provider: {provider_id}")
             except Exception as e:
                 logger.warning(
-                    f"GitHub Webhook: Failed to get default provider: {e}, falling back to template"
+                    f"GitLab Webhook: Failed to get default provider: {e}, falling back to template"
                 )
                 await plugin_instance.send_message(message)
                 return
@@ -74,7 +74,7 @@ async def send_with_agent(plugin_instance, message: str, data: dict, event_type:
                 timeout=plugin_instance.cfg.agent_timeout,
             )
             logger.info(
-                f"GitHub Webhook: LLM response received, length: {len(llm_response.completion_text) if llm_response else 0}"
+                f"GitLab Webhook: LLM response received, length: {len(llm_response.completion_text) if llm_response else 0}"
             )
 
             # 诊断日志：输出长度和内容
@@ -88,7 +88,7 @@ async def send_with_agent(plugin_instance, message: str, data: dict, event_type:
             # 检测输出是否可能被截断
             if output_text and len(output_text) < 100:
                 logger.warning(
-                    f"GitHub Webhook: LLM output suspiciously short (input: {len(llm_input)} chars, output: {len(output_text)} chars)"
+                    f"GitLab Webhook: LLM output suspiciously short (input: {len(llm_input)} chars, output: {len(output_text)} chars)"
                 )
 
             # 从 LLM 响应中提取纯文本内容
@@ -104,28 +104,28 @@ async def send_with_agent(plugin_instance, message: str, data: dict, event_type:
                 if text_content:
                     generated_message = text_content
                     logger.info(
-                        f"GitHub Webhook: Generated message: {generated_message[:100]}..."
+                        f"GitLab Webhook: Generated message: {generated_message[:100]}..."
                     )
                     await plugin_instance.send_message(generated_message)
                 else:
                     logger.warning(
-                        "GitHub Webhook: LLM returned empty content, falling back to template"
+                        "GitLab Webhook: LLM returned empty content, falling back to template"
                     )
                     await plugin_instance.send_message(message)
             else:
                 logger.warning(
-                    "GitHub Webhook: LLM returned None or empty completion, falling back to template"
+                    "GitLab Webhook: LLM returned None or empty completion, falling back to template"
                 )
                 await plugin_instance.send_message(message)
 
         except asyncio.TimeoutError:
             logger.error(
-                f"GitHub Webhook: LLM timeout after {plugin_instance.cfg.agent_timeout} seconds, falling back to template"
+                f"GitLab Webhook: LLM timeout after {plugin_instance.cfg.agent_timeout} seconds, falling back to template"
             )
             await plugin_instance.send_message(message)
 
     except Exception as e:
         # LLM 调用失败，使用模板作为降级方案
-        logger.error(f"GitHub Webhook: LLM invocation failed: {e}")
-        logger.error("GitHub Webhook: Falling back to default template")
+        logger.error(f"GitLab Webhook: LLM invocation failed: {e}")
+        logger.error("GitLab Webhook: Falling back to default template")
         await plugin_instance.send_message(message)

@@ -30,7 +30,7 @@ sudo firewall-cmd --reload
 
 ### 注意事项
 
-**重要**：如果 AstrBot 在 Docker 容器中运行，容器的内部端口（如 8080）必须映射到宿主机端口，否则外部（包括 GitHub webhook）无法访问。
+**重要**：如果 AstrBot 在 Docker 容器中运行，容器的内部端口（如 8080）必须映射到宿主机端口，否则外部（包括 GitLab webhook）无法访问。
 
 ### 方法 1：使用 Docker Compose（推荐）
 
@@ -111,18 +111,18 @@ curl -X POST http://localhost:8080/webhook \
   "rate_limit": 10
 }
 
-// GitHub Webhook 配置
+// GitLab Webhook 配置
 Payload URL: http://你的服务器IP:8080/webhook  // ← 使用宿主机端口
 ```
 
 **关键区别**：
 - Docker 端口映射：`"8080:8080"` （宿主机:容器端口）
 - 插件配置 `port`: `8080` （容器内部端口）
-- GitHub webhook URL: `http://IP:8080` （使用宿主机端口）
+- GitLab webhook URL: `http://IP:8080` （使用宿主机端口）
 
 ## 内网穿透
 
-如果你的服务器在内网，无法直接被 GitHub 访问，可以使用内网穿透工具。
+如果你的服务器在内网，无法直接被 GitLab 访问，可以使用内网穿透工具。
 
 ### 使用 ngrok
 
@@ -137,7 +137,7 @@ ngrok http 8080
 # 获取公网 URL，类似：https://abc123.ngrok.io
 ```
 
-在 GitHub Webhook 中配置：
+在 GitLab Webhook 中配置：
 ```
 Payload URL: https://abc123.ngrok.io/webhook
 ```
@@ -170,7 +170,7 @@ server {
 }
 ```
 
-在 GitHub Webhook 中配置：
+在 GitLab Webhook 中配置：
 ```
 Payload URL: https://your-domain.com/webhook
 ```

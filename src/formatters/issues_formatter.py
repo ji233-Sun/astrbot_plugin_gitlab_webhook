@@ -1,4 +1,4 @@
-"""Issues event formatter."""
+"""Issues event formatter for GitLab."""
 
 
 def format_issue_message(
@@ -17,7 +17,7 @@ def format_issue_message(
     }.get(action, "📝")
 
     return (
-        f"{action_emoji} GitHub Issue Event\n"
+        f"{action_emoji} GitLab Issue Event\n"
         f"👤 {author_name} {action} issue in {repo_name}\n"
         f"📋 Issue #{issue_number}: {title}\n"
         f"📎 {issue_url}"

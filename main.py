@@ -1,4 +1,4 @@
-"""AstrBot GitHub Webhook Plugin - Entry point."""
+"""AstrBot GitLab Webhook Plugin - Entry point."""
 
 import asyncio
 import json
@@ -15,21 +15,21 @@ from astrbot.api.star import Context, Star, register
 # 将 src/ 添加到 sys.path，使 Python 能找到模块
 sys.path.insert(0, str(Path(__file__).parent))
 
-from src.core.plugin import GitHubWebhookPlugin
+from src.core.plugin import GitLabWebhookPlugin
 
 
 @register(
-    "astrbot_plugin_github_webhook",
+    "astrbot_plugin_gitlab_webhook",
     "TatsukiMengChen",
-    "GitHub Webhook 集成插件 - 接收 GitHub 事件并转发到聊天平台",
+    "GitLab Webhook 集成插件 - 接收 GitLab 事件并转发到聊天平台",
     "0.4.0",
 )
 class PluginEntry(Star):
-    """插件入口类，代理到实际的 GitHubWebhookPlugin 类"""
+    """插件入口类，代理到实际的 GitLabWebhookPlugin 类"""
 
     def __init__(self, context: Context, config):
         """初始化插件 - 将调用传递给实际的插件类"""
-        self._plugin = GitHubWebhookPlugin(context, config)
+        self._plugin = GitLabWebhookPlugin(context, config)
 
     async def initialize(self):
         """插件初始化"""

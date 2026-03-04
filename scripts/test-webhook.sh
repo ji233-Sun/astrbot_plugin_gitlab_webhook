@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# GitHub Webhook Plugin - 集成测试脚本
+# GitLab Webhook Plugin - 集成测试脚本
 # 用法: ./test-webhook.sh [选项] <事件类型>
 
 set -e
@@ -19,7 +19,7 @@ NC='\033[0m' # No Color
 # 显示帮助信息
 show_help() {
     cat << EOF
-GitHub Webhook 测试脚本
+GitLab Webhook 测试脚本
 
 用法:
     $0 [选项] <事件类型>
@@ -27,22 +27,22 @@ GitHub Webhook 测试脚本
 选项:
     -H, --host HOST       服务器地址 (默认: localhost)
     -p, --port PORT       服务器端口 (默认: 8080)
-    -s, --secret SECRET   Webhook 密钥 (默认: 无)
+    -s, --secret SECRET   Webhook Token (默认: 无)
     -v, --verbose         详细输出
     -h, --help            显示帮助信息
 
 事件类型:
     push              Push 事件
     issues            Issue 事件
-    pr                Pull Request 事件
+    mr                Merge Request 事件
     ping              Ping 事件 (健康检查)
 
 示例:
     # 发送 push 事件到默认服务器
     $0 push
 
-    # 发送 PR 事件到指定端口
-    $0 -p 6100 pr
+    # 发送 MR 事件到指定端口
+    $0 -p 6100 mr
 
     # 带密钥的测试
     $0 -s "my-secret" issues
@@ -82,7 +82,7 @@ while [[ $# -gt 0 ]]; do
             show_help
             exit 0
             ;;
-        push|issues|pr|ping)
+        push|issues|mr|ping)
             EVENT_TYPE="$1"
             shift
             ;;
@@ -104,7 +104,7 @@ fi
 # 构建 Webhook URL
 WEBHOOK_URL="http://${HOST}:${PORT}/webhook"
 
-echo -e "${GREEN}=== GitHub Webhook 测试 ===${NC}"
+echo -e "${GREEN}=== GitLab Webhook 测试 ===${NC}"
 echo "事件类型: $EVENT_TYPE"
 echo "目标地址: $WEBHOOK_URL"
 echo ""
@@ -114,15 +114,15 @@ send_request() {
     local event_type="$1"
     local payload="$2"
 
-    # 构建 curl 命令
+    # 构建 curl 命令 - 使用 GitLab 格式的头
     CURL_CMD="curl -s -X POST \"$WEBHOOK_URL\" \
         -H \"Content-Type: application/json\" \
-        -H \"X-GitHub-Event: $event_type\""
+        -H \"X-Gitlab-Event: $event_type\""
 
-    # 如果有密钥，添加签名头（简化版，实际使用 HMAC）
+    # 如果有密钥，添加 GitLab Token 头
     if [[ -n "$SECRET" ]]; then
         CURL_CMD="$CURL_CMD \
-        -H \"X-Hub-Signature-256: sha256=$(echo -n \"$payload\" | openssl dgst -sha256 -hmac \"$SECRET\" | awk '{print $2}')\""
+        -H \"X-Gitlab-Token: $SECRET\""
     fi
 
     CURL_CMD="$CURL_CMD \
@@ -157,36 +157,32 @@ send_request() {
     return $EXIT_CODE
 }
 
-# 生成测试 payload
+# 生成测试 payload - GitLab 格式
 case "$EVENT_TYPE" in
     push)
         PAYLOAD='{
+  "object_kind": "push",
   "ref": "refs/heads/main",
   "before": "a1b2c3d4e5f6g7h8i9j0",
   "after": "0j9i8h7g6f5e4d3c2b1a",
-  "repository": {
-    "id": 123456789,
+  "user_name": "Test User",
+  "user_email": "test@example.com",
+  "project": {
+    "id": 123,
     "name": "test-repo",
-    "full_name": "testuser/test-repo",
-    "private": false,
-    "owner": {
-      "login": "testuser",
-      "type": "User"
-    }
+    "path_with_namespace": "testuser/test-repo",
+    "web_url": "https://gitlab.com/testuser/test-repo"
   },
-  "pusher": {
-    "name": "Test User",
-    "email": "test@example.com"
-  },
-  "sender": {
-    "login": "testuser",
-    "type": "User"
+  "repository": {
+    "name": "test-repo",
+    "url": "git@gitlab.com:testuser/test-repo.git"
   },
   "commits": [
     {
       "id": "1234567890abcdef",
       "message": "Test commit message",
       "timestamp": "2024-01-27T10:00:00Z",
+      "url": "https://gitlab.com/testuser/test-repo/-/commit/1234567890abcdef",
       "author": {
         "name": "Test User",
         "email": "test@example.com"
@@ -194,84 +190,75 @@ case "$EVENT_TYPE" in
     }
   ]
 }'
-        send_request "push" "$PAYLOAD"
+        send_request "Push Hook" "$PAYLOAD"
         ;;
 
     issues)
         PAYLOAD='{
-  "action": "opened",
-  "issue": {
+  "object_kind": "issue",
+  "user": {
+    "name": "Test User",
+    "username": "testuser"
+  },
+  "project": {
+    "id": 123,
+    "name": "test-repo",
+    "path_with_namespace": "testuser/test-repo",
+    "web_url": "https://gitlab.com/testuser/test-repo"
+  },
+  "object_attributes": {
     "id": 12345,
-    "number": 1,
+    "iid": 1,
     "title": "Test Issue",
-    "body": "This is a test issue",
-    "state": "open",
-    "user": {
-      "login": "testuser",
-      "type": "User"
-    },
-    "html_url": "https://github.com/testuser/test-repo/issues/1",
-    "labels": []
+    "description": "This is a test issue",
+    "state": "opened",
+    "action": "opened",
+    "url": "https://gitlab.com/testuser/test-repo/-/issues/1"
   },
   "repository": {
-    "id": 123456789,
-    "name": "test-repo",
-    "full_name": "testuser/test-repo",
-    "private": false
-  },
-  "sender": {
-    "login": "testuser",
-    "type": "User"
+    "name": "test-repo"
   }
 }'
-        send_request "issues" "$PAYLOAD"
+        send_request "Issue Hook" "$PAYLOAD"
         ;;
 
-    pr)
+    mr)
         PAYLOAD='{
-  "action": "opened",
-  "number": 10,
-  "pull_request": {
+  "object_kind": "merge_request",
+  "user": {
+    "name": "Test User",
+    "username": "testuser"
+  },
+  "project": {
+    "id": 123,
+    "name": "test-repo",
+    "path_with_namespace": "testuser/test-repo",
+    "web_url": "https://gitlab.com/testuser/test-repo"
+  },
+  "object_attributes": {
     "id": 98765,
-    "title": "Test Pull Request",
-    "body": "This is a test PR",
-    "state": "open",
-    "user": {
-      "login": "testuser",
-      "type": "User"
-    },
-    "html_url": "https://github.com/testuser/test-repo/pull/10",
-    "merged": false,
-    "draft": false,
-    "head": {
-      "ref": "feature-branch",
-      "sha": "a1b2c3d4"
-    },
-    "base": {
-      "ref": "main",
-      "sha": "e5f6g7h8"
-    }
+    "iid": 10,
+    "title": "Test Merge Request",
+    "description": "This is a test MR",
+    "state": "opened",
+    "action": "opened",
+    "source_branch": "feature-branch",
+    "target_branch": "main",
+    "url": "https://gitlab.com/testuser/test-repo/-/merge_requests/10"
   },
   "repository": {
-    "id": 123456789,
-    "name": "test-repo",
-    "full_name": "testuser/test-repo",
-    "private": false
-  },
-  "sender": {
-    "login": "testuser",
-    "type": "User"
+    "name": "test-repo"
   }
 }'
-        send_request "pull_request" "$PAYLOAD"
+        send_request "Merge Request Hook" "$PAYLOAD"
         ;;
 
     ping)
         PAYLOAD='{
-  "zen": "Keep it simple.",
-  "hook_id": 12345
+  "object_kind": "push",
+  "test": true
 }'
-        send_request "ping" "$PAYLOAD"
+        send_request "Push Hook" "$PAYLOAD"
         ;;
 esac
 

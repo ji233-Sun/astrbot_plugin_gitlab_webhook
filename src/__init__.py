@@ -1,5 +1,5 @@
-"""GitHub Webhook Plugin."""
+"""GitLab Webhook Plugin."""
 
-from .core.plugin import GitHubWebhookPlugin
+from .core.plugin import GitLabWebhookPlugin
 
-__all__ = ["GitHubWebhookPlugin"]
+__all__ = ["GitLabWebhookPlugin"]

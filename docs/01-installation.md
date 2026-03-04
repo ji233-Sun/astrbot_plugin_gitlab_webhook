@@ -1,6 +1,6 @@
 # 安装指南
 
-本文档介绍如何安装和配置 AstrBot GitHub Webhook Plugin。
+本文档介绍如何安装和配置 AstrBot GitLab Webhook Plugin。
 
 ## 前置要求
 
@@ -14,13 +14,13 @@
 
 ```bash
 cd AstrBot/data/plugins
-git clone https://github.com/TatsukiMengChen/astrbot_plugin_github_webhook.git
+git clone https://github.com/TatsukiMengChen/astrbot_plugin_gitlab_webhook.git
 ```
 
 ### 2. 安装依赖
 
 ```bash
-cd astrbot_plugin_github_webhook
+cd astrbot_plugin_gitlab_webhook
 pip install -r requirements.txt
 ```
 
@@ -34,13 +34,13 @@ uv pip install -r requirements.txt
 
 在 AstrBot WebUI 中配置插件，或编辑配置文件：
 
-`data/config/astrbot_plugin_github_webhook_config.json`
+`data/config/astrbot_plugin_gitlab_webhook_config.json`
 
 ```json
 {
   "port": 8080,
   "target_umo": "platform_id:GroupMessage:群号",
-  "webhook_secret": "your_github_webhook_secret",
+  "webhook_secret": "your_gitlab_webhook_token",
   "rate_limit": 10
 }
 ```
@@ -62,35 +62,34 @@ sudo systemctl restart astrbot
 查看日志确认插件已加载：
 
 ```
-[INFO] GitHub Webhook server started on port 8080
+[INFO] GitLab Webhook server started on port 8080
 ```
 
-## 配置 GitHub Webhook
+## 配置 GitLab Webhook
 
-### 1. 打开 GitHub 仓库设置
+### 1. 打开 GitLab 项目设置
 
-进入你的 GitHub 仓库 → **Settings** → **Webhooks** → **Add webhook**
+进入你的 GitLab 项目 → **Settings** → **Webhooks**
 
 ### 2. 配置 Webhook
 
-- **Payload URL**: `http://你的服务器IP:配置的端口/webhook`
+- **URL**: `http://你的服务器IP:配置的端口/webhook`
   - 例如：`http://123.45.67.89:8080/webhook`
-- **Content type**: `application/json`
-- **Secret** (强烈推荐): 配置 Webhook 密钥用于签名验证
+- **Secret Token** (强烈推荐): 配置 Webhook 密钥用于验证
   1. 在插件配置中设置 `webhook_secret` 字段
-  2. 将此处生成的密钥复制到 GitHub Webhook 设置
+  2. 将此处生成的密钥复制到 GitLab Webhook 设置
   3. 用于验证请求来源，防止伪造请求
-  4. 留空则禁用签名验证（生产环境不推荐）
-- **Events**: 选择需要触发的事件
-  - 建议勾选：`Pushes`, `Issues`, `Pull requests`
-- **Active**: ✅ 勾选
+  4. 留空则禁用验证（生产环境不推荐）
+- **Trigger**: 选择需要触发的事件
+  - 建议勾选：`Push events`, `Issues events`, `Merge request events`
+- **SSL verification**: 如果使用 HTTP 可以取消勾选
 
 ### 3. 点击 "Add webhook"
 
-GitHub 会发送测试 Ping 事件，检查 AstrBot 日志确认收到：
+GitLab 会发送测试请求，检查 AstrBot 日志确认收到：
 
 ```
-[INFO] GitHub Webhook: Received event type: ping
+[INFO] GitLab Webhook: Received event type: Push Hook
 ```
 
 ## 获取目标 UMO

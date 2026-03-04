@@ -36,7 +36,7 @@ sudo systemctl restart astrbot
 
 ```
 ============================================================
-GitHub Webhook: Configuration loaded
+GitLab Webhook: Configuration loaded
   target_umo: platform_id:GroupMessage:1078537517
   enable_agent: True
   llm_provider_id: openai:gpt-4
@@ -55,7 +55,7 @@ GitHub Webhook: Configuration loaded
 **配置正常**：
 ```
 ============================================================
-GitHub Webhook: Configuration loaded
+GitLab Webhook: Configuration loaded
   target_umo: ...
   enable_agent: True/False
   llm_provider_id: ... 或 (default)
@@ -80,17 +80,17 @@ GitHub Webhook: Configuration loaded
 
 #### 原因 1：系统提示词过长（占用 token）
 
-如果配置的系统提示词太长（例如 50+ 行），会占用大量 token 空间，导致 GitHub 事件内容被压缩或忽略。
+如果配置的系统提示词太长（例如 50+ 行），会占用大量 token 空间，导致 GitLab 事件内容被压缩或忽略。
 
 **诊断方法**：
 查看日志中的长度信息：
 
 ```
 ============================================================
-GitHub Webhook: LLM Processing for push event
+GitLab Webhook: LLM Processing for push event
   Provider: (default)
   Input length: 523 chars
-  Input preview (first 300 chars): GitHub 事件信息：
+  Input preview (first 300 chars): GitLab 事件信息：
 ...
   System prompt length: 1250 chars
 ============================================================
@@ -100,11 +100,11 @@ GitHub Webhook: LLM Processing for push event
 
 #### 原因 2：Prompt 结构问题
 
-如果 GitHub 事件信息放在 prompt 的中间或后面，LLM 可能只关注前面的系统提示词部分。
+如果 GitLab 事件信息放在 prompt 的中间或后面，LLM 可能只关注前面的系统提示词部分。
 
 **诊断方法**：
 1. 简化系统提示词，将主要指令移到 `system_prompt` 参数
-2. GitHub 事件信息放在 prompt 的最前面
+2. GitLab 事件信息放在 prompt 的最前面
 3. 减少 prompt 中的冗余描述
 
 #### 原因 3：LLM 上下文限制
@@ -118,10 +118,10 @@ GitHub Webhook: LLM Processing for push event
 
 **示例日志（截断警告）**：
 ```
-GitHub Webhook: LLM response received, length: 312 chars
+GitLab Webhook: LLM response received, length: 312 chars
   Output preview (first 300 chars): [推送] TatsukiMengChen/astrbot_plugin_github_webhook
 -----------------------------------------------------------------
-GitHub Webhook: LLM output suspiciously short (input: 523 chars, output: 312 chars)
+GitLab Webhook: LLM output suspiciously short (input: 523 chars, output: 312 chars)
 ```
 
 ## Webhook Secret 配置不生效
@@ -129,20 +129,20 @@ GitHub Webhook: LLM output suspiciously short (input: 523 chars, output: 312 cha
 ### 现象
 
 - 在插件中配置了 `webhook_secret`
-- GitHub Webhook 提示 "Invalid signature"
+- GitLab Webhook 提示 "Invalid signature"
 - 配置看起来正确
 
 ### 可能原因
 
-1. GitHub 仓库中的 Secret 配置与插件不一致
+1. GitLab 仓库中的 Secret 配置与插件不一致
 2. 插件配置中包含多余空格或隐藏字符
 3. Secret 在复制粘贴时引入了错误字符
 
 ### 解决方法
 
-#### 方法 1：重新生成 GitHub Webhook Secret
+#### 方法 1：重新生成 GitLab Webhook Secret
 
-1. 进入 GitHub 仓库 → Settings → Webhooks
+1. 进入 GitLab 仓库 → Settings → Webhooks
 2. 找到对应的 webhook
 3. 点击 "Edit"
 4. 滚动到 "Secret" 部分
@@ -181,7 +181,7 @@ GitHub Webhook: LLM output suspiciously short (input: 523 chars, output: 312 cha
 
 ```bash
 # 查找配置加载日志
-grep "GitHub Webhook: Configuration loaded" astrbot.log
+grep "GitLab Webhook: Configuration loaded" astrbot.log
 ```
 
 检查以下关键值：
@@ -216,7 +216,7 @@ chmod 644 data/config/astrbot_plugin_github_webhook_config.json
 
 1. 查看 AstrBot 主日志，寻找错误信息
 2. 检查插件日志，确认事件是否被正确接收
-3. 在 GitHub 仓库提交 Issue，提供详细的错误信息和日志
+3. 在 GitLab 仓库提交 Issue，提供详细的错误信息和日志
 
 ## 相关文档
 

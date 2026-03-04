@@ -5,27 +5,27 @@
 ## 目录结构
 
 ```
-astrbot_plugin_github_webhook/
+astrbot_plugin_gitlab_webhook/
 ├── src/                          # Python 源代码目录
 │   ├── core/                 # 核心管理层
 │   │   ├── __init__.py
 │   │   ├── config.py        # PluginConfig 类（配置管理）
-│   │   ├── plugin.py        # GitHubWebhookPlugin 类（插件实现）
+│   │   ├── plugin.py        # GitLabWebhookPlugin 类（插件实现）
 │   │   └── constants.py     # 常量定义
 │   ├── handlers/              # 事件处理层
 │   │   ├── __init__.py
 │   │   ├── issues_handler.py
-│   │   ├── pull_request_handler.py
+│   │   ├── merge_request_handler.py
 │   │   └── push_handler.py
 │   ├── formatters/             # 消息格式化层
 │   │   ├── __init__.py
 │   │   ├── issues_formatter.py
-│   │   ├── pull_request_formatter.py
+│   │   ├── merge_request_formatter.py
 │   │   └── push_formatter.py
 │   ├── utils/                 # 工具层
 │   │   ├── __init__.py
 │   │   ├── rate_limiter.py     # 请求速率限制器
-│   │   └── verify_signature.py # Webhook 签名验证
+│   │   └── verify_signature.py # Webhook Token 验证
 │   └── services/              # 业务服务层
 │       ├── __init__.py
 │       └── llm_service.py      # LLM 调用服务
@@ -43,7 +43,9 @@ astrbot_plugin_github_webhook/
 │   ├── 06-development.md     # 开发相关
 │   └── 07-project-structure.md # 项目结构（本文件）
 ├── templates/                 # Prompt 模板目录
-│   └── default.md            # 默认系统提示词
+│   ├── default.md            # 默认系统提示词
+│   ├── furina.md             # 芙宁娜角色模板
+│   └── ryo.md                # 山田凉角色模板
 ├── tests/                     # 测试目录
 │   ├── __init__.py
 │   └── test_config.py        # 配置测试
@@ -81,25 +83,25 @@ src/formatters/ + src/utils/ (工具层)
 
 | 模块 | 职责 |
 |--------|--------|
-| **main.py** | 插件入口，代理到实际的 GitHubWebhookPlugin 类 |
+| **main.py** | 插件入口，代理到实际的 GitLabWebhookPlugin 类 |
 | **src/core/config.py** | 配置管理，提供强类型属性访问 |
 | **src/core/plugin.py** | 插件核心实现，Webhook 服务器和事件分发 |
 | **src/core/constants.py** | 常量定义（端口、事件类型、动作等）|
-| **src/handlers/\*** | 处理不同类型的 GitHub 事件 |
-| **src/formatters/\*** | 将 GitHub Payload 转换为可读的消息文本 |
+| **src/handlers/\*** | 处理不同类型的 GitLab 事件 |
+| **src/formatters/\*** | 将 GitLab Payload 转换为可读的消息文本 |
 | **src/utils/rate_limiter.py** | 基于滑动窗口的请求限流器 |
-| **src/utils/verify_signature.py** | GitHub Webhook HMAC-SHA256 签名验证 |
+| **src/utils/verify_signature.py** | GitLab Webhook Token 验证 |
 | **src/services/llm_service.py** | LLM 消息生成服务 |
 
 ## 数据流
 
 ```
-GitHub Webhook
+GitLab Webhook
     ↓
 main.py: PluginEntry.handle_webhook()
     ↓
-src/core/plugin.py: GitHubWebhookPlugin.handle_webhook()
-    ↓ (限流检查、签名验证)
+src/core/plugin.py: GitLabWebhookPlugin.handle_webhook()
+    ↓ (限流检查、Token验证)
 src/handlers/*.py: handle_xxx_event()
     ↓
 src/formatters/*.py: format_xxx_message()
@@ -117,7 +119,7 @@ src/core/plugin.py: send_message() 或 send_with_agent()
 ```python
 # 同级模块
 from .config import PluginConfig
-from .plugin import GitHubWebhookPlugin
+from .plugin import GitLabWebhookPlugin
 
 # 跨层级导入（需要回到 src/）
 from ..handlers.issues_handler import handle_issues_event
@@ -136,7 +138,7 @@ from astrbot.api import all as api
 
 ## 依赖项
 
-### runtime.txt
+### requirements.txt
 
 ```
 aiohttp>=3.11.0

@@ -3,20 +3,20 @@
     "description": "Webhook 服务器端口",
     "type": "int",
     "default": 8080,
-    "hint": "接收 GitHub webhook 请求的端口号，确保防火墙允许该端口"
+    "hint": "接收 GitLab webhook 请求的端口号，确保防火墙允许该端口"
   },
   "target_umo": {
     "description": "目标 UMO",
     "type": "string",
     "default": "",
     "obvious_hint": true,
-    "hint": "接收 GitHub 事件消息的群组或用户 UMO（用户/群组唯一标识符）。在消息事件中可以通过 event.session_id 获取。所有 GitHub 事件都会发送到此目标。"
+    "hint": "接收 GitLab 事件消息的群组或用户 UMO（用户/群组唯一标识符）。在消息事件中可以通过 event.session_id 获取。所有 GitLab 事件都会发送到此目标。"
   },
   "webhook_secret": {
     "description": "Webhook Secret（可选）",
     "type": "string",
     "default": "",
-    "hint": "GitHub Webhook Secret 密钥，用于验证请求来源。在 GitHub 仓库的 Webhook 设置中可以获取。留空则不验证签名。"
+    "hint": "GitLab Webhook Secret 密钥，用于验证请求来源。在 GitLab 仓库的 Webhook 设置中可以获取。留空则不验证签名。"
   },
   "rate_limit": {
     "description": "请求速率限制",
@@ -33,7 +33,7 @@
     "description": "启用 LLM 生成消息",
     "type": "bool",
     "default": false,
-    "hint": "是否使用 LLM 生成个性化的 GitHub 事件消息。启用后，LLM 会根据 GitHub 事件内容生成消息"
+    "hint": "是否使用 LLM 生成个性化的 GitLab 事件消息。启用后，LLM 会根据 GitLab 事件内容生成消息"
   },
   "llm_provider_id": {
     "description": "LLM 提供商",

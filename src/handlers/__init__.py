@@ -1,1 +1,1 @@
-"""Event handler modules for GitHub webhook plugin."""
+"""Event handler modules for GitLab webhook plugin."""

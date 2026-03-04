@@ -1,4 +1,4 @@
-"""Tests for GitHub Webhook plugin."""
+"""Tests for GitLab Webhook plugin."""
 
 import pytest
 from astrbot.api import AstrBotConfig

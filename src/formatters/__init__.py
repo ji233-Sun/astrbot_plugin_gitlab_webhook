@@ -1,1 +1,1 @@
-"""Message formatter modules for GitHub webhook plugin."""
+"""Message formatter modules for GitLab webhook plugin."""

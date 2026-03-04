@@ -1,1 +1,1 @@
-"""Utility modules for GitHub webhook plugin."""
+"""Utility modules for GitLab webhook plugin."""

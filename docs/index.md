@@ -1,6 +1,6 @@
 # 文档索引
 
-欢迎来到 AstrBot GitHub Webhook Plugin 文档中心。
+欢迎来到 AstrBot GitLab Webhook Plugin 文档中心。
 
 ## 快速开始
 
@@ -20,11 +20,11 @@
 
 ## Prompt 示例
 
-查看 `prompts/` 目录获取预置的系统提示词：
-- [默认 Prompt](../prompts/default.md) - 通用 GitHub 事件消息生成提示词
+查看 `templates/` 目录获取预置的系统提示词：
+- [默认 Prompt](../templates/default.md) - 通用 GitLab 事件消息生成提示词
 
 ## 外部资源
 
 - [AstrBot 官方文档](https://docs.astrbot.net)
 - [AstrBot 插件开发指南](https://docs.astrbot.net/dev/star/introduction)
-- [GitHub Webhooks 官方文档](https://docs.github.com/en/developers/webhooks-and-events/webhooks)
+- [GitLab Webhooks 官方文档](https://docs.gitlab.com/ee/user/project/integrations/webhooks.html)

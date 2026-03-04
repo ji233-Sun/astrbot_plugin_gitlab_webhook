@@ -16,7 +16,7 @@ Webhook 服务器监听端口。
 
 **类型**: `string` | **默认值**: `""` (必填)
 
-目标会话标识符（UMO），指定 GitHub 事件消息发送到哪个群组或用户。
+目标会话标识符（UMO），指定 GitLab 事件消息发送到哪个群组或用户。
 
 **格式**: `platform_id:message_type:session_id`
 
@@ -29,15 +29,15 @@ Webhook 服务器监听端口。
 
 **类型**: `string` | **默认值**: `""` (可选)
 
-GitHub Webhook 密钥，用于验证请求来源。
+GitLab Webhook 密钥，用于验证请求来源。
 
 **用途**：
-- 在 GitHub 仓库 Webhook 设置中创建后可获取
+- 在 GitLab 仓库 Webhook 设置中创建后可获取
 - 用于验证请求来源，防止恶意请求
 - 留空则禁用签名验证（生产环境不推荐）
 
 **配置方式**：
-1. 在 GitHub 仓库 → Settings → Webhooks → Add webhook
+1. 在 GitLab 仓库 → Settings → Webhooks → Add webhook
 2. 在 Secret 字段生成一个密钥
 3. 复制该密钥到插件配置的 `webhook_secret` 字段
 
@@ -60,7 +60,7 @@ GitHub Webhook 密钥，用于验证请求来源。
 是否启用 LLM 生成个性化消息。
 
 **功能说明**：
-- 启用后，LLM 会根据 GitHub 事件内容生成简洁、有趣的消息
+- 启用后，LLM 会根据 GitLab 事件内容生成简洁、有趣的消息
 - 需要在 AstrBot 中已配置 LLM Provider
 - 如果禁用，则使用默认模板格式
 - LLM 调用失败时会自动降级到默认模板
@@ -104,16 +104,16 @@ LLM 处理超时时间（秒）。
 
 **示例**：
 ```
-你是一个技术博客编辑，需要将 GitHub 事件转换为生动有趣的简报风格，适当使用 emoji
+你是一个技术博客编辑，需要将 GitLab 事件转换为生动有趣的简报风格，适当使用 emoji
 ```
 
 **提示词模板**：
 查看 `templates/` 目录获取预置的系统提示词：
-- [默认 Prompt](../templates/default.md) - 通用 GitHub 事件消息生成提示词
+- [默认 Prompt](../templates/default.md) - 通用 GitLab 事件消息生成提示词
 
 **注意事项**：
 - 系统提示词过长（如 50+ 行）会占用大量 token 空间
-- 可能导致 GitHub 事件内容被压缩或忽略
+- 可能导致 GitLab 事件内容被压缩或忽略
 - 建议控制提示词长度，确保主要信息能传递给 LLM
 
 ## 配置类型说明

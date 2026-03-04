@@ -1,4 +1,4 @@
-"""Push event formatter."""
+"""Push event formatter for GitLab."""
 
 
 def format_push_message(
@@ -11,7 +11,7 @@ def format_push_message(
 ) -> str:
     """Format push event message."""
     return (
-        f"📦 GitHub Push Event\n"
+        f"📦 GitLab Push Event\n"
         f"👤 {author_name} pushed to {repo_name}\n"
         f"🌿 Branch: {branch}\n"
         f"💬 {commit_message}\n"

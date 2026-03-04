@@ -1,6 +1,6 @@
-# GitHub Webhook 测试工具
+# GitLab Webhook 测试工具
 
-这个目录包含用于测试 GitHub Webhook 插件的脚本。
+这个目录包含用于测试 GitLab Webhook 插件的脚本。
 
 ## test-webhook.sh
 
@@ -8,9 +8,9 @@
 
 ### 功能
 
-- 支持 4 种 GitHub 事件类型：push、issues、pull_request、ping
+- 支持 4 种 GitLab 事件类型：push、issues、mr、ping
 - 可自定义服务器地址和端口
-- 支持 webhook 密钥签名
+- 支持 webhook token 验证
 - 详细的输出模式
 
 ### 使用方法
@@ -21,8 +21,8 @@
 # 发送 push 事件到默认服务器 (localhost:8080)
 ./test-webhook.sh push
 
-# 发送 Pull Request 事件
-./test-webhook.sh pr
+# 发送 Merge Request 事件
+./test-webhook.sh mr
 
 # 发送 Issue 事件
 ./test-webhook.sh issues
@@ -37,11 +37,11 @@
 # 指定端口
 ./test-webhook.sh -p 6100 push
 
-# 使用 webhook 密钥
+# 使用 webhook token
 ./test-webhook.sh -s "your-secret-here" issues
 
 # 指定服务器地址
-./test-webhook.sh -H 192.168.1.100 pr
+./test-webhook.sh -H 192.168.1.100 mr
 
 # 详细输出模式（显示完整的 payload）
 ./test-webhook.sh -v push
@@ -56,7 +56,7 @@
 |------|--------|------|--------|
 | `-H` | `--host` | 服务器地址 | localhost |
 | `-p` | `--port` | 服务器端口 | 8080 |
-| `-s` | `--secret` | Webhook 密钥 | 无 |
+| `-s` | `--secret` | Webhook Token | 无 |
 | `-v` | `--verbose` | 详细输出 | false |
 | `-h` | `--help` | 显示帮助信息 | - |
 
@@ -66,7 +66,7 @@
 |---------|------|
 | `push` | 推送事件 - 测试代码推送通知 |
 | `issues` | Issue 事件 - 测试 Issue 创建/更新 |
-| `pr` | Pull Request 事件 - 测试 PR 创建/更新 |
+| `mr` | Merge Request 事件 - 测试 MR 创建/更新 |
 | `ping` | Ping 事件 - 测试服务器连接 |
 
 ### 测试示例
@@ -79,7 +79,7 @@
 
 输出：
 ```
-=== GitHub Webhook 测试 ===
+=== GitLab Webhook 测试 ===
 事件类型: push
 目标地址: http://localhost:8080/webhook
 
@@ -99,37 +99,36 @@
 #### 3. 详细模式查看 payload
 
 ```bash
-./test-webhook.sh -v pr
+./test-webhook.sh -v mr
 ```
 
 这将显示完整的 JSON payload：
 ```json
 {
-  "action": "opened",
-  "number": 10,
-  "pull_request": {
-    "id": 98765,
-    "title": "Test Pull Request",
+  "object_kind": "merge_request",
+  "object_attributes": {
+    "iid": 10,
+    "title": "Test Merge Request",
     ...
   }
 }
 ```
 
-#### 4. 测试 webhook 签名验证
+#### 4. 测试 webhook token 验证
 
 如果你的插件配置了 webhook_secret：
 
 ```bash
-./test-webhook.sh -s "my-webhook-secret" push
+./test-webhook.sh -s "my-webhook-token" push
 ```
 
-脚本会自动计算 HMAC-SHA256 签名并添加到 `X-Hub-Signature-256` 请求头中。
+脚本会自动添加 `X-Gitlab-Token` 请求头中。
 
 ### 注意事项
 
 1. **确保插件已启动**：测试前请确保 AstrBot 和插件已正确启动
 2. **端口配置**：使用 `-p` 参数指定正确的端口，需要与插件配置的端口一致
-3. **密钥配置**：如果插件启用了签名验证，必须使用 `-s` 参数提供相同的密钥
+3. **密钥配置**：如果插件启用了验证，必须使用 `-s` 参数提供相同的 token
 4. **防火墙**：如果是远程测试，确保防火墙允许访问该端口
 
 ### 故障排查
@@ -151,9 +150,9 @@
 lsof -i :8080
 ```
 
-#### 签名验证失败
+#### Token 验证失败
 
-如果启用了签名验证但未提供密钥，请求会被拒绝（HTTP 401）。
+如果启用了验证但未提供 token，请求会被拒绝（HTTP 401）。
 
 #### 速率限制
 
@@ -166,10 +165,11 @@ lsof -i :8080
 ```bash
 curl -X POST http://localhost:8080/webhook \
   -H "Content-Type: application/json" \
-  -H "X-GitHub-Event: push" \
+  -H "X-Gitlab-Event: Push Hook" \
   -d '{
+    "object_kind": "push",
     "ref": "refs/heads/main",
-    "repository": {
+    "project": {
       "name": "my-repo"
     }
   }'
